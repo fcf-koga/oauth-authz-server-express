@@ -1,5 +1,33 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h1 OAuth 認可サーバ
+  h2 エンドポイント
+  table  
+    thead 
+      tr 
+        th エンドポイント
+        th URL
+    tbody 
+      each val,key in authzServer
+          tr 
+            td= key
+            td= val
+  h2 登録済みクライアント一覧
+  table  
+    thead 
+      tr 
+        th client_id
+        th client_secret
+        th redirect_uris
+        th scope
+    tbody 
+      each client in clients
+          tr 
+            td= client.client_id 
+            td= client.client_secret
+            td= client.redirect_uris  
+            td= client.scope  
+
+
+  

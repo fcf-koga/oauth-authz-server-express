@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  h1 認可画面
+  h2 「#{requests.client_id}」へアクセス権限を委譲しますか？
+  form(method='POST',action='/approve')
+    div.form-group
+      p
+        for s in scope 
+          p
+            input(type='checkbox' name='scope_' +s id='scope_'+s checked='checked')
+            label=s
+      input(type='hidden', name='reqid', value=reqid)
+    button.btn.btn-primary(type='submit' name='action' value='approve') Approve
+    button.btn.btn-secondary(type='submit' name='action' value='deny') Deny
+        
+  if errors
+    ul
+      for error in errors
+        li!= error.msg
