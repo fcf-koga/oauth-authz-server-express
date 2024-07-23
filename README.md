@@ -84,23 +84,3 @@ DEBUG=oauth-authz-server-express:* npm start
 
 http://localhost:3000 にアクセスできるか確認
 アクセスできたら成功
-
-## Setup
-
-### change directory
-
-```
-cd oauth-authz-server-express
-```
-
-### install dependencies
-
-```
-npm install
-```
-
-### run the app
-
-```
-DEBUG=oauth-authz-server-express:* npm start
-```
