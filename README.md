@@ -7,7 +7,7 @@
 <p style="display: inline">
   <!-- フロントエンドのフレームワーク一覧 -->
   <img src="https://img.shields.io/badge/-Node.js-000000.svg?logo=node.js&style=for-the-badge">
-  <img src="https://img.shields.io/badge/-express-000000.svg?logo=express.js&style=for-the-badge">
+  <img src="https://img.shields.io/badge/Express?style=for-the-badge&logo=express&logoColor=%23F7DF1E">
   <img src="https://img.shields.io/badge/-javascript-F7DF1E.svg?logo=javascript&style=for-the-badge">
 </p>
 
@@ -39,6 +39,7 @@
 
 <!-- Treeコマンドを使ってディレクトリ構成を記載 -->
 
+```
 ❯ tree -a -I "node_modules|.next|.git|.pytest_cache|static" -L 2
 .
 ├── .gitignore
@@ -66,6 +67,7 @@
 ├── index.pug
 ├── layout.pug
 └── warn.pug
+```
 
 <p align="right">(<a href="#top">トップへ</a>)</p>
 
