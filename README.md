@@ -2,15 +2,6 @@
 
 ## 使用技術一覧
 
-<!-- シールド一覧 -->
-<!-- 該当するプロジェクトの中から任意のものを選ぶ-->
-<p style="display: inline">
-  <!-- フロントエンドのフレームワーク一覧 -->
-  <img src="https://img.shields.io/badge/-Node.js-000000.svg?logo=node.js&style=for-the-badge">
-  <img src="https://img.shields.io/badge/Express?style=for-the-badge&logo=express&logoColor=%23F7DF1E">
-  <img src="https://img.shields.io/badge/-javascript-F7DF1E.svg?logo=javascript&style=for-the-badge">
-</p>
-
 ## 目次
 
 1. [リポジトリについて](#リポジトリについて)
