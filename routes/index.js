@@ -22,7 +22,8 @@ router.get("/", function (req, res, next) {
 // 認可エンドポイント
 router.get("/authorize", function (req, res, next) {
   /*
-  必須パラメータチェック
+  パラメータチェック
+  client_id
   */
 
   // リクエストで渡されたclient_idが存在するかチェック
@@ -33,6 +34,10 @@ router.get("/authorize", function (req, res, next) {
     return;
   }
 
+  /*
+  パラメータチェック
+  redirect_url
+  */
   let redirect_url;
 
   if (req.query.redirect_url) {
@@ -46,12 +51,14 @@ router.get("/authorize", function (req, res, next) {
   } else {
     redirect_url = client.redirect_uris[0];
   }
-  // リクエストにresponse_typeが指定されているかチェック
-  const responseType = req.query.response_type
-    ? req.query.response_type.split(" ")
-    : undefined;
+
+  /*
+  パラメータチェック
+  response_type
+  */
+
   // リクエストにrespons_typeが指定されているかチェック
-  if (!responseType) {
+  if (!req.query.response_type) {
     const parsedUrl = buildUrl(redirect_url, {
       error: "invalid_response_type",
     });
@@ -59,11 +66,7 @@ router.get("/authorize", function (req, res, next) {
     return;
   }
   // リクエストで渡されたrespons_typeについて対応しているかチェック
-  else if (
-    _.difference(authzServer.responseType, responseType).length ===
-    authzServer.responseType.length
-  ) {
-    // 1つも対応していない場合、リダイレクトエンドポインへエラーを返す
+  else if (!authzServer.responseType.includes(req.query.response_type)) {
     const parsedUrl = buildUrl(redirect_url, {
       error: "unsupported_response_type",
     });

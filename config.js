@@ -4,7 +4,7 @@ const clientAddress = "http://localhost:9000";
 const authzServer = {
   authorizationEndpoint: serverAddress + "/authorize",
   tokenEndpoint: serverAddress + "/token",
-  responseType: ["code", "token"],
+  responseType: ["code"],
 };
 
 // クライアントの情報を格納する配列
