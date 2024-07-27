@@ -32,41 +32,43 @@ router.get("/authorize", function (req, res, next) {
     res.render("warn", { message: "Unknown client" });
     return;
   }
-  // リクエストで渡されたredirect_urlが登録されたuriと一致するかチェック
-  else if (!client.redirect_uris.includes(req.query.redirect_url)) {
-    // 一致しない場合エラーページを返す
-    res.render("warn", { message: "Invalid redirect URI" });
-    return;
+
+  let redirect_url;
+
+  if (req.query.redirect_url) {
+    // リクエストで渡されたredirect_urlが登録されたuriと一致するかチェック
+    if (!client.redirect_uris.includes(req.query.redirect_url)) {
+      // 一致しない場合エラーページを返す
+      res.render("warn", { message: "Invalid redirect URI" });
+      return;
+    }
+    redirect_url = req.query.redirect_url;
+  } else {
+    redirect_url = client.redirect_uris[0];
   }
   // リクエストにresponse_typeが指定されているかチェック
-  else {
-    const responseType = req.query.response_type
-      ? req.query.response_type.split(" ")
-      : undefined;
-
-    // リクエストにrespons_typeが指定されているかチェック
-    if (!responseType) {
-      const parsedUrl = buildUrl(req.query.redirect_url, {
-        error: "invalid_response_type",
-      });
-      res.redirect(parsedUrl);
-      return;
-    }
-    // リクエストで渡されたrespons_typeについて対応しているかチェック
-    else if (
-      _.difference(authzServer.responseType, responseType).length ===
-      authzServer.responseType.length
-    ) {
-      // 1つも対応していない場合、リダイレクトエンドポインへエラーを返す
-      console.log(_.difference(authzServer.responseType, responseType).length);
-      console.log(authzServer.responseType.length);
-
-      const parsedUrl = buildUrl(req.query.redirect_url, {
-        error: "unsupported_response_type",
-      });
-      res.redirect(parsedUrl);
-      return;
-    }
+  const responseType = req.query.response_type
+    ? req.query.response_type.split(" ")
+    : undefined;
+  // リクエストにrespons_typeが指定されているかチェック
+  if (!responseType) {
+    const parsedUrl = buildUrl(redirect_url, {
+      error: "invalid_response_type",
+    });
+    res.redirect(parsedUrl);
+    return;
+  }
+  // リクエストで渡されたrespons_typeについて対応しているかチェック
+  else if (
+    _.difference(authzServer.responseType, responseType).length ===
+    authzServer.responseType.length
+  ) {
+    // 1つも対応していない場合、リダイレクトエンドポインへエラーを返す
+    const parsedUrl = buildUrl(redirect_url, {
+      error: "unsupported_response_type",
+    });
+    res.redirect(parsedUrl);
+    return;
   }
 
   /*
@@ -79,7 +81,7 @@ router.get("/authorize", function (req, res, next) {
     // リクエストで渡されたscopeについて対応しているかチェック
     if (_.difference(client.scope, scope).length === client.scope.length) {
       // 1つも対応していない場合、リダイレクトエンドポインへエラーを返す
-      const urlParsed = buildUrl(req.query.redirect_url, {
+      const urlParsed = buildUrl(redirect_url, {
         error: "invalid_scope",
       });
       res.redirect(urlParsed);
@@ -91,7 +93,7 @@ router.get("/authorize", function (req, res, next) {
   // ランダムに生成した文字列をキーとしてリクエストのクエリパラメータを格納
   req.session.requests = {};
   req.session.requests[reqid] = req.query;
-  console.log(reqid);
+  req.session.requests[reqid].redirect_url = redirect_url;
 
   res.render("approve", {
     requests: req.session.requests[reqid],
