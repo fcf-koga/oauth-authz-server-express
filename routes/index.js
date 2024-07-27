@@ -23,7 +23,7 @@ router.get("/", function (req, res, next) {
 router.get("/authorize", function (req, res, next) {
   /*
   パラメータチェック
-  client_id
+  client_id[必須]
   */
 
   // リクエストで渡されたclient_idが存在するかチェック
@@ -36,7 +36,7 @@ router.get("/authorize", function (req, res, next) {
 
   /*
   パラメータチェック
-  redirect_url
+  redirect_url[任意]
   */
   let redirect_url;
 
@@ -54,7 +54,7 @@ router.get("/authorize", function (req, res, next) {
 
   /*
   パラメータチェック
-  response_type
+  response_type[必須]
   */
 
   // リクエストにrespons_typeが指定されているかチェック
@@ -75,21 +75,30 @@ router.get("/authorize", function (req, res, next) {
   }
 
   /*
-  任意パラメータチェック
+  パラメータチェック
+  scope[任意]
   */
 
-  const scope = req.query.scope ? req.query.scope.split(" ") : undefined;
+  let scope = req.query.scope ? req.query.scope.split(" ") : undefined;
   // リクエストにscopeが指定されているかチェック
   if (scope) {
-    // リクエストで渡されたscopeについて対応しているかチェック
-    if (_.difference(client.scope, scope).length === client.scope.length) {
-      // 1つも対応していない場合、リダイレクトエンドポインへエラーを返す
+    // リクエストで渡されたscopeに不正なscopeが1つでも含まれているかチェック
+    if (_.difference(scope, client.scope).length > 0) {
+      // 含まれていた場合、リダイレクトエンドポインへエラーを返す
       const urlParsed = buildUrl(redirect_url, {
         error: "invalid_scope",
       });
       res.redirect(urlParsed);
       return;
     }
+  }
+  // 指定されていない場合エラー
+  else {
+    const urlParsed = buildUrl(redirect_url, {
+      error: "invalid_scope",
+    });
+    res.redirect(urlParsed);
+    return;
   }
 
   const reqid = randomstring.generate(8);
