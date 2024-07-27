@@ -48,7 +48,9 @@ router.get("/authorize", function (req, res, next) {
       return;
     }
     redirect_url = req.query.redirect_url;
-  } else {
+  }
+  // redirect_urlが指定されていない場合、デフォルトのredirect_urlを設定
+  else {
     redirect_url = client.redirect_uris[0];
   }
 
@@ -101,12 +103,16 @@ router.get("/authorize", function (req, res, next) {
     return;
   }
 
+  /*
+  リダイレクト前後で状態を保持するためのreqidを発行
+  */
   const reqid = randomstring.generate(8);
-  // ランダムに生成した文字列をキーとしてリクエストのクエリパラメータを格納
+  // reqidをキーとしてリクエストのクエリパラメータを格納
   req.session.requests = {};
   req.session.requests[reqid] = req.query;
   req.session.requests[reqid].redirect_url = redirect_url;
 
+  // 認可承認画面を表示する
   res.render("approve", {
     requests: req.session.requests[reqid],
     reqid: reqid,
