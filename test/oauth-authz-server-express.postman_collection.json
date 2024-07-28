@@ -43,7 +43,7 @@
 					"response": []
 				},
 				{
-					"name": "認可エンドポイント",
+					"name": "認可リクエスト",
 					"event": [
 						{
 							"listen": "test",
@@ -188,6 +188,16 @@
 									"key": "reqid",
 									"value": "{{reqid}}",
 									"type": "text"
+								},
+								{
+									"key": "scope_foo",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "scope_bar",
+									"value": "",
+									"type": "text"
 								}
 							]
 						},
@@ -205,7 +215,7 @@
 					"response": []
 				},
 				{
-					"name": "トークンエンドポイント",
+					"name": "トークンリクエスト",
 					"event": [
 						{
 							"listen": "test",
@@ -294,442 +304,754 @@
 			"name": "異常系",
 			"item": [
 				{
-					"name": "認可エンドポイント（param未指定）",
-					"event": [
+					"name": "認可エンドポイント",
+					"item": [
 						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"pm.test(\"Body matches string\", function () {",
-									"    pm.expect(pm.response.text()).to.include(\"Unknown client\");",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
+							"name": "認可リクエスト（param未指定）",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"pm.test(\"Body matches string\", function () {",
+											"    pm.expect(pm.response.text()).to.include(\"Unknown client\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
 								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/authorize",
-							"host": [
-								"{{baseUrl}}"
 							],
-							"path": [
-								"authorize"
-							]
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/authorize",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"authorize"
+									]
+								},
+								"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+							},
+							"response": []
 						},
-						"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
-					},
-					"response": []
+						{
+							"name": "認可リクエスト（client_id不正）",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"pm.test(\"Body matches string\", function () {",
+											"    pm.expect(pm.response.text()).to.include(\"Unknown client\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/authorize?client_id=xxxxxx",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"authorize"
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "xxxxxx"
+										}
+									]
+								},
+								"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+							},
+							"response": []
+						},
+						{
+							"name": "認可リクエスト（redirect_url未指定）",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 302\", function () {",
+											"    pm.response.to.have.status(302);",
+											"});",
+											"pm.test(\"Body matches string\", function () {",
+											"    pm.expect(pm.response.text()).to.include(\"invalid_response_type\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"authorize"
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "{{client_id}}"
+										}
+									]
+								},
+								"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+							},
+							"response": []
+						},
+						{
+							"name": "認可リクエスト（redirect_url不正）",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"pm.test(\"Body matches string\", function () {",
+											"    pm.expect(pm.response.text()).to.include(\"Invalid redirect URI\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url=xxxxx",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"authorize"
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "{{client_id}}"
+										},
+										{
+											"key": "redirect_url",
+											"value": "xxxxx"
+										}
+									]
+								},
+								"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+							},
+							"response": []
+						},
+						{
+							"name": "認可リクエスト（redirect_url不一致）",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"pm.test(\"Body matches string\", function () {",
+											"    pm.expect(pm.response.text()).to.include(\"Invalid redirect URI\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}/xxx",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"authorize"
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "{{client_id}}"
+										},
+										{
+											"key": "redirect_url",
+											"value": "{{redirect_url}}/xxx"
+										}
+									]
+								},
+								"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+							},
+							"response": []
+						},
+						{
+							"name": "認可リクエスト（response_type未指定）",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 302\", function () {",
+											"    pm.response.to.have.status(302);",
+											"});",
+											"pm.test(\"Body matches string\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Location\")).to.include(\"invalid_response_type\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"followRedirects": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"authorize"
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "{{client_id}}"
+										},
+										{
+											"key": "redirect_url",
+											"value": "{{redirect_url}}"
+										}
+									]
+								},
+								"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+							},
+							"response": []
+						},
+						{
+							"name": "認可リクエスト（response_type不正）",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 302\", function () {",
+											"    pm.response.to.have.status(302);",
+											"});",
+											"pm.test(\"Body matches string\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Location\")).to.include(\"unsupported_response_type\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"followRedirects": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}&response_type=xxxxx",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"authorize"
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "{{client_id}}"
+										},
+										{
+											"key": "redirect_url",
+											"value": "{{redirect_url}}"
+										},
+										{
+											"key": "response_type",
+											"value": "xxxxx"
+										}
+									]
+								},
+								"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+							},
+							"response": []
+						},
+						{
+							"name": "認可リクエスト（scope未指定）",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 302\", function () {",
+											"    pm.response.to.have.status(302);",
+											"});",
+											"pm.test(\"Body matches string\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Location\")).to.include(\"invalid_scope\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"followRedirects": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}&response_type=code",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"authorize"
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "{{client_id}}"
+										},
+										{
+											"key": "redirect_url",
+											"value": "{{redirect_url}}"
+										},
+										{
+											"key": "response_type",
+											"value": "code"
+										},
+										{
+											"key": "",
+											"value": "",
+											"disabled": true
+										}
+									]
+								},
+								"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+							},
+							"response": []
+						},
+						{
+							"name": "認可リクエスト（scope不正）",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 302\", function () {",
+											"    pm.response.to.have.status(302);",
+											"});",
+											"pm.test(\"Body matches string\", function () {",
+											"    pm.expect(pm.response.headers.get(\"Location\")).to.include(\"invalid_scope\");",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true,
+								"followRedirects": false
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": []
+								},
+								"url": {
+									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}&response_type=code&scope=xxx",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"authorize"
+									],
+									"query": [
+										{
+											"key": "client_id",
+											"value": "{{client_id}}"
+										},
+										{
+											"key": "redirect_url",
+											"value": "{{redirect_url}}"
+										},
+										{
+											"key": "response_type",
+											"value": "code"
+										},
+										{
+											"key": "scope",
+											"value": "xxx"
+										}
+									]
+								},
+								"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+							},
+							"response": []
+						}
+					]
 				},
 				{
-					"name": "認可エンドポイント（client_id不正）",
-					"event": [
+					"name": "承認エンドポイント",
+					"item": [
 						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"pm.test(\"Body matches string\", function () {",
-									"    pm.expect(pm.response.text()).to.include(\"Unknown client\");",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/authorize?client_id=xxxxxx",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"authorize"
-							],
-							"query": [
+							"name": "承認リクエスト（reqid不正）",
+							"event": [
 								{
-									"key": "client_id",
-									"value": "xxxxxx"
+									"listen": "test",
+									"script": {
+										"exec": [
+											"const cheerio = require('cheerio');",
+											"",
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"const $ = cheerio.load(pm.response.text());",
+											"pm.test('Example.com is working.', function() {",
+											"  pm.expect($('h1').text()).to.equal('No matching authorization request');",
+											"});",
+											"",
+											"",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
 								}
-							]
+							],
+							"protocolProfileBehavior": {
+								"followRedirects": false
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "action",
+											"value": "approve",
+											"type": "text"
+										},
+										{
+											"key": "reqid",
+											"value": "xxx",
+											"type": "text"
+										},
+										{
+											"key": "scope_foo",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "scope_bar",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/approve",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"approve"
+									]
+								},
+								"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+							},
+							"response": []
 						},
-						"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
-					},
-					"response": []
-				},
-				{
-					"name": "認可エンドポイント（redirect_url未指定）",
-					"event": [
 						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 302\", function () {",
-									"    pm.response.to.have.status(302);",
-									"});",
-									"pm.test(\"Body matches string\", function () {",
-									"    pm.expect(pm.response.text()).to.include(\"invalid_response_type\");",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/authorize?client_id={{client_id}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"authorize"
-							],
-							"query": [
+							"name": "承認リクエスト（scope不正）",
+							"event": [
 								{
-									"key": "client_id",
-									"value": "{{client_id}}"
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 302\", function () {",
+											"    pm.response.to.have.status(302);",
+											"});",
+											"",
+											"// リダイレクトURLをヘッダーから取得",
+											"const redirectUrl = pm.response.headers.get(\"Location\");",
+											"",
+											"if (redirectUrl) {",
+											"    // URLのクエリパラメータ部分を取得",
+											"    const queryParams = redirectUrl.split('?')[1];",
+											"    ",
+											"    if (queryParams) {",
+											"        // クエリパラメータを解析",
+											"        const params = queryParams.split('&');",
+											"        let error = null;",
+											"        ",
+											"        params.forEach(param => {",
+											"            const [key, value] = param.split('=');",
+											"            if (key === 'error') {",
+											"                error = value;",
+											"            }",
+											"        });",
+											"        pm.test('Example.com is working.', function() {",
+											"        pm.expect(error).to.equal('invalid_scope');",
+											"        });",
+											"    }",
+											"}",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
 								}
-							]
+							],
+							"protocolProfileBehavior": {
+								"followRedirects": false
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "action",
+											"value": "approve",
+											"type": "text"
+										},
+										{
+											"key": "reqid",
+											"value": "{{reqid}}",
+											"type": "text"
+										},
+										{
+											"key": "scope_foo",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "scope_xxx",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/approve",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"approve"
+									]
+								},
+								"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+							},
+							"response": []
 						},
-						"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
-					},
-					"response": []
-				},
-				{
-					"name": "認可エンドポイント（redirect_url不正）",
-					"event": [
 						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"pm.test(\"Body matches string\", function () {",
-									"    pm.expect(pm.response.text()).to.include(\"Invalid redirect URI\");",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
+							"name": "承認リクエスト（承認拒否）",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 302\", function () {",
+											"    pm.response.to.have.status(302);",
+											"});",
+											"",
+											"// リダイレクトURLをヘッダーから取得",
+											"const redirectUrl = pm.response.headers.get(\"Location\");",
+											"",
+											"if (redirectUrl) {",
+											"    // URLのクエリパラメータ部分を取得",
+											"    const queryParams = redirectUrl.split('?')[1];",
+											"    ",
+											"    if (queryParams) {",
+											"        // クエリパラメータを解析",
+											"        const params = queryParams.split('&');",
+											"        let error = null;",
+											"        ",
+											"        params.forEach(param => {",
+											"            const [key, value] = param.split('=');",
+											"            if (key === 'error') {",
+											"                error = value;",
+											"            }",
+											"        });",
+											"        pm.test('Example.com is working.', function() {",
+											"        pm.expect(error).to.equal('accsess_denied');",
+											"        });",
+											"    }",
+											"}",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"followRedirects": false
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "action",
+											"value": "deny",
+											"type": "text"
+										},
+										{
+											"key": "reqid",
+											"value": "{{reqid}}",
+											"type": "text"
+										},
+										{
+											"key": "scope_foo",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "scope_bar",
+											"value": "",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{baseUrl}}/approve",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"approve"
+									]
+								},
+								"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
+							},
+							"response": []
 						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url=xxxxx",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"authorize"
-							],
-							"query": [
-								{
-									"key": "client_id",
-									"value": "{{client_id}}"
-								},
-								{
-									"key": "redirect_url",
-									"value": "xxxxx"
-								}
-							]
-						},
-						"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
-					},
-					"response": []
-				},
-				{
-					"name": "認可エンドポイント（redirect_url不一致）",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"pm.test(\"Body matches string\", function () {",
-									"    pm.expect(pm.response.text()).to.include(\"Invalid redirect URI\");",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}/xxx",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"authorize"
-							],
-							"query": [
-								{
-									"key": "client_id",
-									"value": "{{client_id}}"
-								},
-								{
-									"key": "redirect_url",
-									"value": "{{redirect_url}}/xxx"
-								}
-							]
-						},
-						"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
-					},
-					"response": []
-				},
-				{
-					"name": "認可エンドポイント（response_type未指定）",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 302\", function () {",
-									"    pm.response.to.have.status(302);",
-									"});",
-									"pm.test(\"Body matches string\", function () {",
-									"    pm.expect(pm.response.headers.get(\"Location\")).to.include(\"invalid_response_type\");",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true,
-						"followRedirects": false
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": []
-						},
-						"url": {
-							"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"authorize"
-							],
-							"query": [
-								{
-									"key": "client_id",
-									"value": "{{client_id}}"
-								},
-								{
-									"key": "redirect_url",
-									"value": "{{redirect_url}}"
-								}
-							]
-						},
-						"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
-					},
-					"response": []
-				},
-				{
-					"name": "認可エンドポイント（response_type不正）",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 302\", function () {",
-									"    pm.response.to.have.status(302);",
-									"});",
-									"pm.test(\"Body matches string\", function () {",
-									"    pm.expect(pm.response.headers.get(\"Location\")).to.include(\"unsupported_response_type\");",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true,
-						"followRedirects": false
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": []
-						},
-						"url": {
-							"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}&response_type=xxxxx",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"authorize"
-							],
-							"query": [
-								{
-									"key": "client_id",
-									"value": "{{client_id}}"
-								},
-								{
-									"key": "redirect_url",
-									"value": "{{redirect_url}}"
-								},
-								{
-									"key": "response_type",
-									"value": "xxxxx"
-								}
-							]
-						},
-						"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
-					},
-					"response": []
-				},
-				{
-					"name": "認可エンドポイント（scope不正）",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Status code is 302\", function () {",
-									"    pm.response.to.have.status(302);",
-									"});",
-									"pm.test(\"Body matches string\", function () {",
-									"    pm.expect(pm.response.headers.get(\"Location\")).to.include(\"invalid_scope\");",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true,
-						"followRedirects": false
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": []
-						},
-						"url": {
-							"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}&response_type=code&scope=xxxxx",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"authorize"
-							],
-							"query": [
-								{
-									"key": "client_id",
-									"value": "{{client_id}}"
-								},
-								{
-									"key": "redirect_url",
-									"value": "{{redirect_url}}"
-								},
-								{
-									"key": "response_type",
-									"value": "code"
-								},
-								{
-									"key": "scope",
-									"value": "xxxxx"
-								}
-							]
-						},
-						"description": "This request uses the saved `token` collection variable to access a secret 'name' stored against that token.\n\nIn this request, we used the `token` collection variable as a query param to fetch the name generated for that token. We have added a test to check that a name is correctly returned."
-					},
-					"response": []
+					]
 				}
 			]
 		}
