@@ -121,6 +121,7 @@ router.get("/authorize", function (req, res, next) {
   return;
 });
 
+// 承認エンドポイント
 router.post("/approve", function (req, res, next) {
   const requests = req.session.requests[req.body.reqid];
   delete req.session.requests[req.body.reqid];
