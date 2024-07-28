@@ -129,14 +129,14 @@ router.post("/approve", function (req, res, next) {
     res.render("warn", { message: "No matching authorization request" });
     return;
   }
-  // ユーザーが許可した場合
+  // ユーザーが認可を承認した場合
   if (req.body.action === "approve") {
     if (requests.response_type === "code") {
       const scope = getScopesFromForm(req.body);
       const client = getClient(requests.client_id);
 
-      if (_.difference(scope, client.scope).length === client.scope.length) {
-        const urlParsed = buildUrl(requests.redirect_uri, {
+      if (_.difference(scope, client.scope).length > 0) {
+        const urlParsed = buildUrl(requests.redirect_url, {
           error: "invalid_scope",
         });
         res.redirect(urlParsed);
@@ -169,7 +169,7 @@ router.post("/approve", function (req, res, next) {
       return;
     }
   }
-  // ユーザーが拒否した場合
+  // ユーザーが認可を拒否した場合
   else {
     const urlParsed = buildUrl(requests.redirect_url, {
       error: "accsess_denied",
