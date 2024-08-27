@@ -85,7 +85,7 @@
 							"urlencoded": []
 						},
 						"url": {
-							"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}&response_type=code&scope={{scope}}&state={{$randomInt}}",
+							"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_uri={{redirect_uri}}&response_type=code&scope={{scope}}&state={{$randomInt}}",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -98,8 +98,8 @@
 									"value": "{{client_id}}"
 								},
 								{
-									"key": "redirect_url",
-									"value": "{{redirect_url}}"
+									"key": "redirect_uri",
+									"value": "{{redirect_uri}}"
 								},
 								{
 									"key": "response_type",
@@ -407,7 +407,7 @@
 							"response": []
 						},
 						{
-							"name": "認可リクエスト（redirect_url未指定）",
+							"name": "認可リクエスト（redirect_uri未指定）",
 							"event": [
 								{
 									"listen": "test",
@@ -460,7 +460,7 @@
 							"response": []
 						},
 						{
-							"name": "認可リクエスト（redirect_url不正）",
+							"name": "認可リクエスト（redirect_uri不正）",
 							"event": [
 								{
 									"listen": "test",
@@ -494,7 +494,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url=xxxxx",
+									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_uri=xxxxx",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -507,7 +507,7 @@
 											"value": "{{client_id}}"
 										},
 										{
-											"key": "redirect_url",
+											"key": "redirect_uri",
 											"value": "xxxxx"
 										}
 									]
@@ -517,7 +517,7 @@
 							"response": []
 						},
 						{
-							"name": "認可リクエスト（redirect_url不一致）",
+							"name": "認可リクエスト（redirect_uri不一致）",
 							"event": [
 								{
 									"listen": "test",
@@ -551,7 +551,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}/xxx",
+									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_uri={{redirect_uri}}/xxx",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -564,8 +564,8 @@
 											"value": "{{client_id}}"
 										},
 										{
-											"key": "redirect_url",
-											"value": "{{redirect_url}}/xxx"
+											"key": "redirect_uri",
+											"value": "{{redirect_uri}}/xxx"
 										}
 									]
 								},
@@ -604,7 +604,7 @@
 									"urlencoded": []
 								},
 								"url": {
-									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}",
+									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_uri={{redirect_uri}}",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -617,8 +617,8 @@
 											"value": "{{client_id}}"
 										},
 										{
-											"key": "redirect_url",
-											"value": "{{redirect_url}}"
+											"key": "redirect_uri",
+											"value": "{{redirect_uri}}"
 										}
 									]
 								},
@@ -657,7 +657,7 @@
 									"urlencoded": []
 								},
 								"url": {
-									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}&response_type=xxxxx",
+									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_uri={{redirect_uri}}&response_type=xxxxx",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -670,8 +670,8 @@
 											"value": "{{client_id}}"
 										},
 										{
-											"key": "redirect_url",
-											"value": "{{redirect_url}}"
+											"key": "redirect_uri",
+											"value": "{{redirect_uri}}"
 										},
 										{
 											"key": "response_type",
@@ -714,7 +714,7 @@
 									"urlencoded": []
 								},
 								"url": {
-									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}&response_type=code",
+									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_uri={{redirect_uri}}&response_type=code",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -727,8 +727,8 @@
 											"value": "{{client_id}}"
 										},
 										{
-											"key": "redirect_url",
-											"value": "{{redirect_url}}"
+											"key": "redirect_uri",
+											"value": "{{redirect_uri}}"
 										},
 										{
 											"key": "response_type",
@@ -776,7 +776,7 @@
 									"urlencoded": []
 								},
 								"url": {
-									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_url={{redirect_url}}&response_type=code&scope=xxx",
+									"raw": "{{baseUrl}}/authorize?client_id={{client_id}}&redirect_uri={{redirect_uri}}&response_type=code&scope=xxx",
 									"host": [
 										"{{baseUrl}}"
 									],
@@ -789,8 +789,8 @@
 											"value": "{{client_id}}"
 										},
 										{
-											"key": "redirect_url",
-											"value": "{{redirect_url}}"
+											"key": "redirect_uri",
+											"value": "{{redirect_uri}}"
 										},
 										{
 											"key": "response_type",
